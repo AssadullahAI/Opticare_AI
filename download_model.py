@@ -1,7 +1,7 @@
 import os
 import gdown
 
-MODEL_URL = "https://drive.google.com/uc?id=10gb2HGZfkYlgq9B78DixTL309vx7nAdF"
+MODEL_URL = "https://github.com/AssadullahAI/Opticare_AI/releases/download/v1.0/eye_disease_model.pth"
 MODEL_PATH = "models/eye_disease_model.pth"
 
 def download_model():
@@ -20,7 +20,6 @@ def download_model():
     return MODEL_PATH
 
 
-    return MODEL_PATH
 
 
 
