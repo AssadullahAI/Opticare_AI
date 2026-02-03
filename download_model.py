@@ -19,8 +19,8 @@ def download_model():
 
     return MODEL_PATH
 
-        )
 
     return MODEL_PATH
+
 
 
