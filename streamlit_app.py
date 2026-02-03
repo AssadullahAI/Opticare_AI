@@ -6,7 +6,6 @@ Production-Grade Medical AI Application for Eye Disease Detection and Analysis
 import sys
 from pathlib import Path
 import os
-from datetime import datetime
 
 # -------------------------------------------------
 # FIX IMPORT PATHS (CRITICAL)
@@ -26,6 +25,14 @@ from src.embeddings import EmbeddingManager, SemanticSearch
 from src.chatbot import MedicalChatbot
 from src.safety import SafetyProtocol
 
+from download_model import MODEL_PATH, download_model
+
+# -------------------------------------------------
+# DOWNLOAD MODEL FROM GOOGLE DRIVE (ONLY IF NOT FOUND)
+# -------------------------------------------------
+if not os.path.exists(MODEL_PATH):
+    with st.spinner("📥 Downloading AI model..."):
+        download_model()
 
 # -------------------------------------------------
 # IMAGE CLASSIFIER (SHOW REAL ERRORS)
@@ -37,23 +44,6 @@ try:
     from src.image_classifier import EyeDiseaseClassifier, ImageQualityChecker
 except Exception as e:
     st.error(f"❌ Image classifier failed to load:\n\n{e}")
-
-
-# -------------------------------------------------
-# DOWNLOAD MODEL FROM GOOGLE DRIVE
-# -------------------------------------------------
-DRIVE_ID = "10gb2HGZfkYlgq9B78DixTL309vx7nAdF"
-MODEL_PATH = Config.MODEL_PATH  # ✅ SINGLE SOURCE OF TRUTH
-
-if not os.path.exists(MODEL_PATH):
-    os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
-    with st.spinner("📥 Downloading AI model..."):
-        gdown.download(
-            f"https://drive.google.com/uc?id={DRIVE_ID}",
-            MODEL_PATH,
-            quiet=False
-        )
-
 
 # -------------------------------------------------
 # PAGE CONFIG
@@ -67,7 +57,6 @@ st.set_page_config(
         "About": f"# {Config.APP_NAME}\n\nVersion {Config.VERSION}\n\nAI-powered eye disease analysis platform."
     }
 )
-
 
 # -------------------------------------------------
 # SYSTEM INITIALIZATION (CACHED)
@@ -92,7 +81,6 @@ def initialize_system():
 
     return chatbot, safety, classifier, quality_checker, stats
 
-
 # -------------------------------------------------
 # SESSION STATE
 # -------------------------------------------------
@@ -109,7 +97,6 @@ if "initialized" not in st.session_state:
     st.session_state.chat_history = []
     st.session_state.analysis_count = 0
 
-
 # -------------------------------------------------
 # HEADER
 # -------------------------------------------------
@@ -122,7 +109,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
 
 # -------------------------------------------------
 # SIDEBAR
@@ -142,7 +128,6 @@ with st.sidebar:
         st.session_state.chatbot.clear_conversation()
         st.success("Chat history cleared")
 
-
 # -------------------------------------------------
 # TABS
 # -------------------------------------------------
@@ -152,7 +137,6 @@ tab1, tab2, tab3, tab4 = st.tabs([
     "📊 Analytics",
     "📚 Medical Info"
 ])
-
 
 # ================= TAB 1: CHATBOT =================
 with tab1:
@@ -183,7 +167,6 @@ with tab1:
 
             st.write(response["answer"])
             st.session_state.analysis_count += 1
-
 
 # ================= TAB 2: IMAGE ANALYSIS =================
 with tab2:
@@ -222,12 +205,10 @@ with tab2:
         else:
             st.error("❌ Image classifier not available")
 
-
 # ================= TAB 3: ANALYTICS =================
 with tab3:
     st.metric("Total Questions", len(st.session_state.chat_history))
     st.metric("Total Analyses", st.session_state.analysis_count)
-
 
 # ================= TAB 4: MEDICAL INFO =================
 with tab4:
@@ -236,7 +217,6 @@ with tab4:
     for key, disease in Config.DISEASES.items():
         with st.expander(f"{disease['emoji']} {disease['name']}"):
             st.write(f"Severity: **{disease['severity'].title()}**")
-
 
 # -------------------------------------------------
 # FOOTER
