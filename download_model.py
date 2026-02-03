@@ -1,13 +1,9 @@
-import gdown
 import os
+import gdown
 
-MODEL_PATH = "model/model.pt"
-DRIVE_ID = "10gb2HGZfkYlgq9B78DixTL309vx7nAdF"
+MODEL_URL = "https://drive.google.com/uc?id=10gb2HGZfkYlgq9B78DixTL309vx7nAdF"
+MODEL_PATH = "models/eye_disease_model.pth"
 
-def download_model():
-    url = f"https://drive.google.com/uc?id={DRIVE_ID}"
-    gdown.download(url, MODEL_PATH, quiet=False)
+os.makedirs("models", exist_ok=True)
+gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
 
-    # Verify file exists and size
-    if not os.path.exists(MODEL_PATH) or os.path.getsize(MODEL_PATH) < 10000000:
-        raise Exception("Model download failed or file is incomplete. Check Google Drive link.")
