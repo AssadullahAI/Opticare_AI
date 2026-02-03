@@ -1,13 +1,10 @@
 """
 👁️ OptiCare AI - Advanced Medical Eye Analysis Platform
-Production-Grade Medical AI Application for Eye Disease Detection and Analysis
 """
 
 import sys
-from pathlib import Path
 import os
-import nltk
-import re
+from pathlib import Path
 
 # -------------------------------------------------
 # FIX IMPORT PATHS (CRITICAL)
@@ -20,6 +17,7 @@ import streamlit as st
 from PIL import Image
 import pandas as pd
 import gdown
+import nltk
 
 from config.settings import Config
 from src.dataloader import DataLoader
@@ -35,41 +33,12 @@ from download_model import MODEL_PATH, download_model
 NLTK_DATA_DIR = "/tmp/nltk_data"
 os.makedirs(NLTK_DATA_DIR, exist_ok=True)
 nltk.data.path.append(NLTK_DATA_DIR)
-
 nltk.download("punkt", quiet=True)
 
 # -------------------------------------------------
 # DOWNLOAD MODEL FROM GOOGLE DRIVE (ONLY IF NOT FOUND)
 # -------------------------------------------------
 if not os.path.exists(MODEL_PATH) or os.path.getsize(MODEL_PATH) < 10000000:
-    with st.spinner("📥 Downloading AI model..."):
-        download_model()
-
-
-# Download required NLTK resources
-try:
-    nltk.download("punkt", download_dir=NLTK_DATA_DIR, quiet=True)
-    nltk.download("punkt_tab", download_dir=NLTK_DATA_DIR, quiet=True)
-except Exception:
-    pass
-
-
-# Fallback sentence tokenizer if NLTK fails
-def safe_sent_tokenize(text):
-    try:
-        return nltk.sent_tokenize(text)
-    except Exception:
-        # Basic regex fallback
-        return re.split(r'(?<=[.!?])\s+', text)
-
-
-# Monkey patch to prevent LookupError
-nltk.sent_tokenize = safe_sent_tokenize
-
-# -------------------------------------------------
-# DOWNLOAD MODEL FROM GOOGLE DRIVE (ONLY IF NOT FOUND)
-# -------------------------------------------------
-if not os.path.exists(MODEL_PATH):
     with st.spinner("📥 Downloading AI model..."):
         download_model()
 
