@@ -7,24 +7,20 @@ MODEL_PATH = "models/eye_disease_model.pth"
 def download_model():
     os.makedirs("models", exist_ok=True)
 
-    # Download model
+    # download model
     gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
 
-    # Verify model size
+    # verify file
     if not os.path.exists(MODEL_PATH):
-        raise FileNotFoundError("Model file not found after download.")
+        raise FileNotFoundError("Model not downloaded")
 
-    size = os.path.getsize(MODEL_PATH)
-    if size < 10000000:  # 10MB minimum size
-        raise ValueError(
-            f"Downloaded model file is too small ({size} bytes). "
-            "Download likely failed or got corrupted."
+    if os.path.getsize(MODEL_PATH) < 10000000:
+        raise ValueError("Model file is too small. Download failed.")
+
+    return MODEL_PATH
+
         )
 
     return MODEL_PATH
 
-            "Download likely failed or got corrupted."
-        )
-
-    return MODEL_PATH
 
