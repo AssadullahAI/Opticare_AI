@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual env
+venv/
+
+# Logs
+logs/
+
+# Data (optional – comment if you want data tracked)
+data/
