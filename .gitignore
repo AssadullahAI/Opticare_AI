@@ -10,3 +10,5 @@ logs/
 
 # Data (optional – comment if you want data tracked)
 data/
+# Model files
+*.pth
