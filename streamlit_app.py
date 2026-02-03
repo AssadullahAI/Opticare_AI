@@ -18,6 +18,7 @@ import streamlit as st
 from PIL import Image
 import pandas as pd
 import gdown
+import nltk
 
 from config.settings import Config
 from src.dataloader import DataLoader
@@ -26,6 +27,11 @@ from src.chatbot import MedicalChatbot
 from src.safety import SafetyProtocol
 
 from download_model import MODEL_PATH, download_model
+
+# -------------------------------------------------
+# NLTK DOWNLOAD (FIX FOR STREAMLIT CLOUD)
+# -------------------------------------------------
+nltk.download("punkt", quiet=True)
 
 # -------------------------------------------------
 # DOWNLOAD MODEL FROM GOOGLE DRIVE (ONLY IF NOT FOUND)
@@ -66,6 +72,13 @@ def initialize_system():
     # Data
     data_loader = DataLoader(str(Config.DATA_DIR))
     texts, diseases, metadata = data_loader.load_documents()
+
+    # If data is missing, fallback
+    if not texts:
+        texts = ["Welcome to OptiCare AI. Dataset missing on Streamlit Cloud."]
+        diseases = ["No disease data"]
+        metadata = [{}]
+
     stats = data_loader.get_statistics()
 
     # Embeddings
@@ -116,8 +129,8 @@ st.markdown(
 with st.sidebar:
     st.markdown("### 🎛️ Control Panel")
 
-    st.metric("Knowledge Sentences", st.session_state.stats["total_sentences"])
-    st.metric("Diseases", st.session_state.stats["total_diseases"])
+    st.metric("Knowledge Sentences", st.session_state.stats.get("total_sentences", 0))
+    st.metric("Diseases", st.session_state.stats.get("total_diseases", 0))
     st.metric("Analyses Performed", st.session_state.analysis_count)
 
     confidence_threshold = st.slider("Confidence Threshold", 0.0, 1.0, 0.6)
