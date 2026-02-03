@@ -22,3 +22,9 @@ def download_model():
         )
 
     return MODEL_PATH
+
+            "Download likely failed or got corrupted."
+        )
+
+    return MODEL_PATH
+
