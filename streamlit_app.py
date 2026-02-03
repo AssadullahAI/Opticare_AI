@@ -6,6 +6,7 @@ Production-Grade Medical AI Application for Eye Disease Detection and Analysis
 import sys
 from pathlib import Path
 import os
+import nltk
 
 # -------------------------------------------------
 # FIX IMPORT PATHS (CRITICAL)
@@ -18,7 +19,6 @@ import streamlit as st
 from PIL import Image
 import pandas as pd
 import gdown
-import nltk
 
 from config.settings import Config
 from src.dataloader import DataLoader
