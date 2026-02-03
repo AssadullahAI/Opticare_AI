@@ -1,4 +1,3 @@
-
 """
 👁️ OptiCare AI - Advanced Medical Eye Analysis Platform
 """
@@ -17,7 +16,6 @@ sys.path.insert(0, str(ROOT_DIR / "src"))
 import streamlit as st
 from PIL import Image
 import pandas as pd
-import gdown
 import nltk
 
 from config.settings import Config
@@ -37,11 +35,15 @@ nltk.data.path.append(NLTK_DATA_DIR)
 nltk.download("punkt", quiet=True)
 
 # -------------------------------------------------
-# DOWNLOAD MODEL FROM GOOGLE DRIVE (ONLY IF NOT FOUND)
+# DOWNLOAD MODEL FROM GITHUB RELEASE (ONLY IF NOT FOUND)
 # -------------------------------------------------
 if not os.path.exists(MODEL_PATH) or os.path.getsize(MODEL_PATH) < 10000000:
     with st.spinner("📥 Downloading AI model..."):
-        download_model()
+        try:
+            download_model()
+        except Exception as e:
+            st.error("❌ Model download failed. Please check the release URL or upload the file again.")
+            st.stop()
 
 # -------------------------------------------------
 # IMAGE CLASSIFIER (SHOW REAL ERRORS)
